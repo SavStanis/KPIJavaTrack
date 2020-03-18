@@ -1,35 +1,57 @@
 package com.savstanis.lab1.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 
-public class Service {
+public class DBService {
 
-    public static ArrayList<AirTour> getAirTourByOperator(String nameOfOperator) {
+    AirTour[] airTours;
 
-        AirTour[] airTours = DataSource.getAirTours();
+    public DBService() {
+        airTours = DataSource.getAirTours();
+    }
 
-        ArrayList<AirTour> appropriateTours = new ArrayList<AirTour>();
+    public AirTour[] getAirTourByOperator(String nameOfOperator) {
 
+        int counter = 0;
         for (AirTour airTour: airTours) {
-            if(airTour.getTourOperator().equals(nameOfOperator))  {
-                appropriateTours.add(airTour);
+            if(airTour.getTourOperator().equals(nameOfOperator)) {
+                counter++;
+            }
+        }
+
+        AirTour[] appropriateTours = new AirTour[counter];
+
+        counter = 0;
+        for (AirTour airTour: airTours) {
+            if(airTour.getTourOperator().equals(nameOfOperator)) {
+                appropriateTours[counter] = airTour;
+                counter++;
             }
         }
 
         return appropriateTours;
     }
 
-    public static ArrayList<AirTour> getAirTourByVisitingPoint(String nameOfPoint) {
+    public AirTour[] getAirTourByVisitingPoint(String nameOfPoint) {
 
-        AirTour[] airTours = DataSource.getAirTours();
-
-        ArrayList<AirTour> appropriateTours = new ArrayList<AirTour>();
-
+        int counter = 0;
         for (AirTour airTour : airTours) {
             for (String point: airTour.visitingPoints) {
                 if(point.equals(nameOfPoint))  {
-                    appropriateTours.add(airTour);
+                    counter++;
+                    break;
+                }
+            }
+        }
+
+        AirTour[] appropriateTours = new AirTour[counter];
+
+        counter = 0;
+        for (AirTour airTour : airTours) {
+            for (String point: airTour.visitingPoints) {
+                if(point.equals(nameOfPoint))  {
+                    appropriateTours[counter] = airTour;
+                    counter++;
                     break;
                 }
             }
@@ -38,17 +60,25 @@ public class Service {
         return appropriateTours;
     }
 
-    public static ArrayList<AirTour> getAirTourByTitleAndDate(String titleOfTour, Date endingDate) {
+    public AirTour[] getAirTourByTitleAndDate(String tourName, Date endingDate) {
 
-        AirTour[] airTours = DataSource.getAirTours();
-
-        ArrayList<AirTour> appropriateTours = new ArrayList<AirTour>();
-
+        int counter = 0;
         for (AirTour airTour : airTours) {
-            if(airTour.getTourTitle().equals(titleOfTour) && airTour.getDateOfDeparture().before(endingDate))  {
-                appropriateTours.add(airTour);
+            if(airTour.getTourTitle().equals(tourName) && airTour.getDateOfDeparture().before(endingDate) && airTour.getNumberOfFreePlaces() > 0)  {
+                counter++;
             }
         }
+
+        AirTour[] appropriateTours = new AirTour[counter];
+
+        counter = 0;
+        for (AirTour airTour : airTours) {
+            if(airTour.getTourTitle().equals(tourName) && airTour.getDateOfDeparture().before(endingDate) && airTour.getNumberOfFreePlaces() > 0)  {
+                appropriateTours[counter] = airTour;
+                counter++;
+            }
+        }
+
         return appropriateTours;
     }
 }
