@@ -14,8 +14,11 @@ public class SetOfLines {
     public SetOfLines() {
         setOfLines = new HashSet<>();
 
+//        setOfLines.add(new Line(new Point(-1, -1), new Point(1, 1)));
+//        setOfLines.add(new Line(new Point(-1, -2), new Point(1, 0)));
+
         setOfLines.add(new Line(new Point(-1000, -2000), new Point(1, 2)));
-        setOfLines.add(new Line(new Point(-1000, -100000), new Point(2, 2)));
+        setOfLines.add(new Line(new Point(-10000, -100000), new Point(2, 2)));
         setOfLines.add(new Line(new Point(-90, -4), new Point(43, 2)));
         setOfLines.add(new Line(new Point(10, 20), new Point(26, -2)));
         setOfLines.add(new Line(new Point(1022, -2), new Point(333, -2)));
@@ -28,6 +31,7 @@ public class SetOfLines {
         setOfLines.add(new Line(new Point(-244, 1), new Point(28, 25)));
         setOfLines.add(new Line(new Point(-21, 1), new Point(2, 65)));
         setOfLines.add(new Line(new Point(0, 90), new Point(60, 10)));
+        setOfLines.add(new Line(new Point(1, 1), new Point(46, 71)));
         setOfLines.add(new Line(new Point(1, 1), new Point(46, 71)));
     }
 
@@ -67,7 +71,10 @@ public class SetOfLines {
     public Point getCrossPointOfTwoSLinesWithTheSmallestX() {
         Line line1 = getLineWithTheSmallestX();
         deleteLine(line1);
+        System.out.println(line1);
+
         Line line2 = getLineWithTheSmallestX();
+        System.out.println(line2);
         deleteLine(line2);
 
 

@@ -1,0 +1,11 @@
+Configuration:
+  Appenders:
+    File:
+      name: FileAppender
+      fileName: logs/logfile.log
+
+  Loggers:
+    Root:
+      level: warn
+      AppenderRef:
+        ref: FileAppender
