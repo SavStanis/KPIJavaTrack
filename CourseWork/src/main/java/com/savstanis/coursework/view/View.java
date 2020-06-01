@@ -5,58 +5,56 @@ import com.savstanis.coursework.model.DBService;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.ResourceBundle;
 
 public class View {
 
     private final InputScanner scan;
-    private ResourceBundle resourceBundle;
+    private static LocaleManager localeManager = LocaleManager.getInstance();
 
     public View() {
         scan = new InputScanner();
-        resourceBundle = ResourceBundle.getBundle("Messages");
     }
 
     public void updateResourceBundle() {
-        this.resourceBundle = ResourceBundle.getBundle("Messages");;
+        localeManager.updateLocale();
     }
 
     public String getMainMenu() {
-        System.out.println(resourceBundle.getString("main_menu"));
+        System.out.println(localeManager.getString("main_menu"));
         return scan.menuInput();
     }
 
     public void outputErrorMessage() {
-        System.err.println(resourceBundle.getString("error_message"));
+        System.err.println(localeManager.getString("error_message"));
     }
 
     public String getOperatorName() {
-        System.out.println(resourceBundle.getString("input_operator_message"));
+        System.out.println(localeManager.getString("input_operator_message"));
         return scan.inputOperatorName();
     }
 
     public String getVisitingPoint() {
-        System.out.println(resourceBundle.getString("input_visiting_points"));
+        System.out.println(localeManager.getString("input_visiting_points"));
         return  scan.inputVisitingPoint();
     }
 
     public String getTourName() {
-        System.out.println(resourceBundle.getString("input_tour_name"));
+        System.out.println(localeManager.getString("input_tour_name"));
         return  scan.inputTourName();
     }
 
     public Date getDate() {
-        System.out.println(resourceBundle.getString("input_date"));
+        System.out.println(localeManager.getString("input_date"));
         return  scan.inputDate();
     }
 
     public String getFilePath() {
-        System.out.println(resourceBundle.getString("input_path"));
+        System.out.println(localeManager.getString("input_path"));
         return  scan.inputFilePath();
     }
 
     public String changeLanguageMenu() {
-        System.out.println(resourceBundle.getString("change_locale"));
+        System.out.println(localeManager.getString("change_locale"));
         return scan.menuInput();
     }
 
@@ -66,19 +64,19 @@ public class View {
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         System.out.println(
             String.format("%15s | %20s | %40s | %10s | %25s | %25s | %20s ",
-                    resourceBundle.getString("tour_title"),
-                    resourceBundle.getString("tour_operator"),
-                    resourceBundle.getString("visiting_points"),
-                    resourceBundle.getString("value"),
-                    resourceBundle.getString("number_of_free_places"),
-                    resourceBundle.getString("number_of_occupied_places"),
-                    resourceBundle.getString("date_of_departure")
+                    localeManager.getString("tour_title"),
+                    localeManager.getString("tour_operator"),
+                    localeManager.getString("visiting_points"),
+                    localeManager.getString("value"),
+                    localeManager.getString("number_of_free_places"),
+                    localeManager.getString("number_of_occupied_places"),
+                    localeManager.getString("date_of_departure")
             )
         );
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         if(tourList.length == 0) {
-            System.out.println(resourceBundle.getString("no_appropriate_tours"));
+            System.out.println(localeManager.getString("no_appropriate_tours"));
             return;
         }
         for (AirTour airTour: tourList) {
@@ -92,8 +90,7 @@ public class View {
     }
 
     public static void outputExceptionMessage(String message) {
-        System.err.println(message);
-        System.err.println("Try again!");
+        System.err.println(localeManager.getString(message));
     }
 
 }

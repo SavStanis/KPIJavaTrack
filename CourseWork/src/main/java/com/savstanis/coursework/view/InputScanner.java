@@ -32,7 +32,7 @@ public class InputScanner {
                 return choice;
             } catch (NameFormatException e) {
                 logger.error(e.toString(), e);
-                View.outputExceptionMessage(e.toString());
+                View.outputExceptionMessage("invalid_name_input");
             }
         }
     }
@@ -47,7 +47,7 @@ public class InputScanner {
                 return choice;
             } catch (NameFormatException e) {
                 logger.error(e.toString(), e);
-                View.outputExceptionMessage(e.toString());
+                View.outputExceptionMessage("invalid_name_input");
             }
         }
     }
@@ -64,7 +64,7 @@ public class InputScanner {
 
             } catch (NameFormatException e) {
                 logger.error(e.toString(), e);
-                View.outputExceptionMessage(e.toString());
+                View.outputExceptionMessage("invalid_name_input");
             }
         }
     }
@@ -79,7 +79,7 @@ public class InputScanner {
                 return new SimpleDateFormat("dd-MM-yyyy").parse(date);
             } catch (InvalidDateException | ParseException e) {
                 logger.error(e.toString(), e);
-                View.outputExceptionMessage(e.toString());
+                View.outputExceptionMessage(e.getMessage());
             }
         }
     }

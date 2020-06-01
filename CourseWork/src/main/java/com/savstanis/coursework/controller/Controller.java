@@ -1,13 +1,13 @@
 package com.savstanis.coursework.controller;
 
 import com.savstanis.coursework.model.DBService;
+import com.savstanis.coursework.view.LocaleManager;
 import com.savstanis.coursework.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class Controller {
 
@@ -15,12 +15,12 @@ public class Controller {
 
     private final View view;
     private DBService dbService;
-    private ResourceBundle resourceBundle;
+    private LocaleManager localeManager;
 
     public Controller() {
         this.logger = LogManager.getLogger(Controller.class);
         this.view = new View();
-        resourceBundle = ResourceBundle.getBundle("Messages");
+        localeManager = LocaleManager.getInstance();
 
         try {
             this.dbService = new DBService();
@@ -32,7 +32,7 @@ public class Controller {
     }
 
     public void updateResourceBundle() {
-        resourceBundle = ResourceBundle.getBundle("Messages");
+        localeManager.updateLocale();
     }
 
     public void run() {
@@ -44,25 +44,25 @@ public class Controller {
                 case "1":
                     view.viewData(
                             dbService.getAirTourByOperator(view.getOperatorName()),
-                            resourceBundle.getString("tours_by_name_of_operator")
+                            localeManager.getString("tours_by_name_of_operator")
                     );
                     break;
                 case "2":
                     view.viewData(
                             dbService.getAirTourByVisitingPoint(view.getVisitingPoint()),
-                            resourceBundle.getString("tours_by_visiting_points")
+                            localeManager.getString("tours_by_visiting_points")
                      );
                     break;
                 case "3":
                     view.viewData(
                             dbService.getAirTourByTitleAndDate(view.getTourName(), view.getDate()),
-                            resourceBundle.getString("tours_by_title_and_date")
+                            localeManager.getString("tours_by_title_and_date")
                     );
                     break;
                 case "4":
                     view.viewData(
                             dbService.getAirTours(),
-                            resourceBundle.getString("all_tours")
+                            localeManager.getString("all_tours")
                     );
                     break;
                 case "5":
@@ -73,7 +73,7 @@ public class Controller {
                         );
                     } catch (IOException e) {
                         logger.error("Invalid  filename input!");
-                        View.outputExceptionMessage(e.toString());
+                        View.outputExceptionMessage(e.getMessage());
                     }
                     break;
                 case "6":

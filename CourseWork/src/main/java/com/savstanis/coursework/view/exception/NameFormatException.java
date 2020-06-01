@@ -4,4 +4,5 @@ public class NameFormatException extends Exception {
     public NameFormatException() {
         super("Invalid name input!");
     }
+
 }
