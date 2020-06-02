@@ -93,7 +93,7 @@ public class Controller {
     private void changeLocale() {
         switch (view.changeLanguageMenu()) {
             case "2":
-                Locale.setDefault(new Locale("ru", "UA"));
+                Locale.setDefault(new Locale("ru", "RU"));
                 break;
             default:
                 Locale.setDefault(new Locale("en", "US"));
