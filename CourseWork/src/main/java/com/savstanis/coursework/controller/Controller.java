@@ -99,8 +99,6 @@ public class Controller {
                 Locale.setDefault(new Locale("en", "US"));
                 break;
         }
-
-        view.updateResourceBundle();
         updateResourceBundle();
     }
 }

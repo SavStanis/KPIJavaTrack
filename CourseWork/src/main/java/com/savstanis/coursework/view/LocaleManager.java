@@ -6,7 +6,7 @@ public class LocaleManager {
     private static LocaleManager localeManager;
     private ResourceBundle resourceBundle;
 
-    public LocaleManager() {
+    private LocaleManager() {
         resourceBundle = ResourceBundle.getBundle("Messages");
     }
 
