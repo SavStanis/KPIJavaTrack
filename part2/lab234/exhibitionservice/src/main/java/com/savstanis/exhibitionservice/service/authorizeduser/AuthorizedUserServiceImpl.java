@@ -1,12 +1,9 @@
 package com.savstanis.exhibitionservice.service.authirizeduser;
 
-import com.savstanis.exhibitionservice.model.ConnectionPoolSupplier;
 import com.savstanis.exhibitionservice.model.dao.DaoFactory;
 import com.savstanis.exhibitionservice.model.dao.DaoFactoryImpl;
 import com.savstanis.exhibitionservice.model.dao.exhibition.ExhibitionDao;
-import com.savstanis.exhibitionservice.model.dao.exhibition.ExhibitionDaoImpl;
 import com.savstanis.exhibitionservice.model.dao.ticket.TicketDao;
-import com.savstanis.exhibitionservice.model.dao.ticket.TicketDaoImpl;
 import com.savstanis.exhibitionservice.model.dto.TicketDto;
 import com.savstanis.exhibitionservice.model.entity.Exhibition;
 import com.savstanis.exhibitionservice.model.entity.Ticket;
