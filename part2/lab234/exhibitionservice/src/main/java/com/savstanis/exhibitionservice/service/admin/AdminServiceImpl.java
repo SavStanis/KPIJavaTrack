@@ -28,6 +28,7 @@ public class AdminServiceImpl implements AdminService {
     public void createExhibition(ExhibitionCreationDto exhibitionDto) throws SQLException, InvalidDateException, InvalidPriceException {
         Validator.validateOpeningClosingDates(exhibitionDto.getOpeningDate(), exhibitionDto.getClosingDate());
         Validator.validatePrice(exhibitionDto.getPrice());
+        Validator.validateExhibitionTitle(exhibitionDto.getTitle());
 
         ExhibitionDao exhibitionDao = daoFactory.getExhibitionDao();
         exhibitionDao.create(exhibitionDto.toExhibition());

@@ -3,6 +3,7 @@ package com.savstanis.exhibitionservice.controller.command;
 import com.savstanis.exhibitionservice.model.dto.LoginDto;
 import com.savstanis.exhibitionservice.model.entity.User;
 import com.savstanis.exhibitionservice.service.auth.AuthService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,31 +12,16 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class LoginCommand implements Command {
-
+public class LoginPostCommand implements Command {
     private AuthService authService;
+    final static Logger logger = Logger.getLogger(LoginPostCommand.class);
 
-    public LoginCommand(AuthService authService) {
+    public LoginPostCommand(AuthService authService) {
         this.authService = authService;
     }
 
     @Override
     public void run(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if ("GET".equals(request.getMethod())) {
-            doGet(request, response);
-            return;
-        }
-
-        if ("POST".equals(request.getMethod())) {
-            doPost(request, response);
-        }
-    }
-
-    private void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
-    }
-
-    private void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         LoginDto loginDto = new LoginDto();
         loginDto.setEmail(request.getParameter("email"));
         loginDto.setPassword(request.getParameter("password"));
@@ -49,6 +35,7 @@ public class LoginCommand implements Command {
         }
 
         if (user != null) {
+            logger.info("User with email " + user.getEmail() + " was logged in");
             HttpSession httpSession = request.getSession();
             httpSession.setAttribute("user_id", user.getId());
             httpSession.setAttribute("email", user.getEmail());
@@ -57,6 +44,7 @@ public class LoginCommand implements Command {
 
             response.sendRedirect(request.getContextPath() + "/");
         } else {
+            logger.warn("Someone tried to log in under email " + loginDto.getEmail());
             request.setAttribute("error", "Invalid email or password");
             request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
         }

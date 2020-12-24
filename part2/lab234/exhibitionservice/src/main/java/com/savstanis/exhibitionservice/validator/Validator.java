@@ -1,9 +1,6 @@
 package com.savstanis.exhibitionservice.validator;
 
-import com.savstanis.exhibitionservice.exception.InvalidDateException;
-import com.savstanis.exhibitionservice.exception.InvalidEmailException;
-import com.savstanis.exhibitionservice.exception.InvalidPasswordException;
-import com.savstanis.exhibitionservice.exception.InvalidPriceException;
+import com.savstanis.exhibitionservice.exception.*;
 
 import java.util.Date;
 
@@ -29,9 +26,16 @@ public class Validator {
             throw new InvalidDateException();
         }
     }
+
     public static void validatePrice(double price) {
         if (price < 0) {
             throw new InvalidPriceException();
+        }
+    }
+
+    public static void validateExhibitionTitle(String title) {
+        if (title == null || "".equals(title)) {
+            throw new InvalidExhibitionTitleException();
         }
     }
 }

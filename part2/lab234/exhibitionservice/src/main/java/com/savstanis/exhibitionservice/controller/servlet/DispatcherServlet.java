@@ -5,8 +5,8 @@ import com.savstanis.exhibitionservice.service.admin.AdminService;
 import com.savstanis.exhibitionservice.service.admin.AdminServiceImpl;
 import com.savstanis.exhibitionservice.service.auth.AuthService;
 import com.savstanis.exhibitionservice.service.auth.AuthServiceImpl;
-import com.savstanis.exhibitionservice.service.authirizeduser.AuthorizedUserService;
-import com.savstanis.exhibitionservice.service.authirizeduser.AuthorizedUserServiceImpl;
+import com.savstanis.exhibitionservice.service.authorizeduser.AuthorizedUserService;
+import com.savstanis.exhibitionservice.service.authorizeduser.AuthorizedUserServiceImpl;
 import com.savstanis.exhibitionservice.service.unauthorizeduser.UnauthorizedUserService;
 import com.savstanis.exhibitionservice.service.unauthorizeduser.UnauthorizedUserServiceImpl;
 
@@ -21,7 +21,8 @@ import java.util.Map;
 
 @WebServlet(name = "DispatcherServlet", urlPatterns = {"/login", "/register", "/"})
 public class DispatcherServlet extends HttpServlet {
-    private Map<String, Command> commands;
+    private Map<String, Command> getCommands;
+    private Map<String, Command> postCommands;
 
     @Override
     public void init() {
@@ -30,21 +31,37 @@ public class DispatcherServlet extends HttpServlet {
         AuthorizedUserService authorizedUserService = new AuthorizedUserServiceImpl();
         AdminService adminService = new AdminServiceImpl();
 
-        commands = new HashMap<>();
+        getCommands = new HashMap<>();
+        
+        getCommands.put("/", new IndexCommand(unauthorizedUserService));
+        getCommands.put("/login", new LoginGetCommand());
+        getCommands.put("/register", new RegisterGetCommand(authService));
+        getCommands.put("/logout", new LogoutCommand());
+        getCommands.put("/tickets", new TicketGetCommand(authorizedUserService));
+        getCommands.put("/exhibitions/create", new CreateExhibitionGetCommand());
+        getCommands.put("/filter/", new FilterCommand(unauthorizedUserService));
+        
+        postCommands = new HashMap<>();
 
-        commands.put("/", new IndexCommand(unauthorizedUserService));
-        commands.put("/login", new LoginCommand(authService));
-        commands.put("/register", new RegisterCommand(authService));
-        commands.put("/logout", new LogoutCommand());
-        commands.put("/tickets", new TicketCommand(authorizedUserService));
-        commands.put("/exhibitions/create", new CreateExhibition(adminService));
-        commands.put("/exhibitions/cancel", new CancelExhibition(adminService));
-        commands.put("/filter/", new FilterCommand(unauthorizedUserService));
+        postCommands.put("/login", new LoginPostCommand(authService));
+        postCommands.put("/register", new RegisterPostCommand(authService));
+        postCommands.put("/tickets", new TicketPostCommand(authorizedUserService));
+        postCommands.put("/exhibitions/create", new CreateExhibitionPostCommand(adminService));
+        postCommands.put("/exhibitions/cancel", new CancelExhibitionPostCommand(adminService));
+
     }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Command command = commands.get(req.getServletPath());
+        Command command = null;
+
+        if ("GET".equals(req.getMethod())) {
+            command = getCommands.get(req.getServletPath());
+        }
+
+        if ("POST".equals(req.getMethod())) {
+            command = postCommands.get(req.getServletPath());
+        }
 
         if (command != null) {
             command.run(req, resp);

@@ -1,6 +1,7 @@
 package com.savstanis.exhibitionservice.controller.command;
 
 import com.savstanis.exhibitionservice.service.unauthorizeduser.UnauthorizedUserService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import java.util.Date;
 public class FilterCommand implements Command {
 
     private final UnauthorizedUserService unauthorizedUserService;
+    final static Logger logger = Logger.getLogger(FilterCommand.class);
 
     public FilterCommand(UnauthorizedUserService unauthorizedUserService) {
         this.unauthorizedUserService = unauthorizedUserService;
@@ -56,9 +58,10 @@ public class FilterCommand implements Command {
                     break;
                 }
             }
-            System.out.println(request.getAttribute("exhibitions"));
             request.getRequestDispatcher("/jsp/index.jsp").forward(request, response);
         } catch (ParseException | SQLException e) {
+            logger.error(e.getStackTrace());
+
             request.setAttribute("error", "Sorry, some problems on our server");
             request.getRequestDispatcher("/jsp/index.jsp").forward(request, response);
         }

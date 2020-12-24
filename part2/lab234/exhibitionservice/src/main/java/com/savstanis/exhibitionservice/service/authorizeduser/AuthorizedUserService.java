@@ -1,7 +1,6 @@
-package com.savstanis.exhibitionservice.service.authirizeduser;
+package com.savstanis.exhibitionservice.service.authorizeduser;
 
 import com.savstanis.exhibitionservice.model.dto.TicketDto;
-import com.savstanis.exhibitionservice.model.entity.Ticket;
 
 import java.sql.SQLException;
 import java.util.List;

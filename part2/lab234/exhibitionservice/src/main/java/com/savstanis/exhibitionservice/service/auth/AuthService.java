@@ -8,5 +8,5 @@ import java.sql.SQLException;
 
 public interface AuthService {
     User login(LoginDto loginDto) throws SQLException;
-    boolean register(RegisterDto registerDto) throws SQLException;
+    void register(RegisterDto registerDto) throws SQLException;
 }

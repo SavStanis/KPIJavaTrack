@@ -1,5 +1,6 @@
-package com.savstanis.exhibitionservice.service.authirizeduser;
+package com.savstanis.exhibitionservice.service.authorizeduser;
 
+import com.savstanis.exhibitionservice.exception.InvalidExhibitionException;
 import com.savstanis.exhibitionservice.model.dao.DaoFactory;
 import com.savstanis.exhibitionservice.model.dao.DaoFactoryImpl;
 import com.savstanis.exhibitionservice.model.dao.exhibition.ExhibitionDao;
@@ -28,7 +29,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
         exhibitionDao.close();
 
         if (exhibition.isEmpty()) {
-            return;
+            throw new InvalidExhibitionException();
         }
 
         Ticket ticket = Ticket.builder()
@@ -40,7 +41,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
         TicketDao ticketDao = daoFactory.getTicketDao();
         ticketDao.create(ticket);
-        exhibitionDao.close();
+        ticketDao.close();
     }
 
     @Override
