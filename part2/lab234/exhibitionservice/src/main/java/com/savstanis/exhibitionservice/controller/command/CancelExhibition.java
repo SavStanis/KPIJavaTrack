@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 public class CancelExhibition implements Command {
@@ -29,12 +30,18 @@ public class CancelExhibition implements Command {
         }
     }
 
-    private void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String body = request.getReader().lines().collect(Collectors.joining());
-        Gson gson = new Gson();
+    private void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String body = request.getReader().lines().collect(Collectors.joining());
+            Gson gson = new Gson();
 
-        int exhibitionId = gson.fromJson(body, JsonObject.class).get("exhibitionId").getAsInt();
+            int exhibitionId = gson.fromJson(body, JsonObject.class).get("exhibitionId").getAsInt();
 
-        adminService.cancelExhibitionById(exhibitionId);
+
+            adminService.cancelExhibitionById(exhibitionId);
+        } catch (SQLException throwables) {
+            request.setAttribute("error", "Sorry, some problems on our server");
+            request.getRequestDispatcher("/jsp/index.jsp").forward(request, response);
+        }
     }
 }

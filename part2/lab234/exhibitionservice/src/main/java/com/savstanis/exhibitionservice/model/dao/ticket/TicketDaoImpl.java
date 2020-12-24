@@ -130,4 +130,13 @@ public class TicketDaoImpl implements TicketDao {
 
         return numberOfTickets;
     }
+
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 }

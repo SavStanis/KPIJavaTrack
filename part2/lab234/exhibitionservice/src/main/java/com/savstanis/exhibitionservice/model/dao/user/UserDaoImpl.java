@@ -71,4 +71,13 @@ public class UserDaoImpl implements UserDao {
 
         return Optional.ofNullable(user);
     }
+
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 }

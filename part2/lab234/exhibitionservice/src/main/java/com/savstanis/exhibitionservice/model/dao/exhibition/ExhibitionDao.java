@@ -22,4 +22,5 @@ public interface ExhibitionDao {
     List<Exhibition> getByDate(Date date);
 
     void update(Exhibition exhibition);
+    void close();
 }

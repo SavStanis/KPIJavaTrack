@@ -8,4 +8,5 @@ public interface UserDao {
     void create(User user);
     Optional<User> findById(int id);
     Optional<User> findByEmail(String email);
+    void close();
 }

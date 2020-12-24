@@ -14,8 +14,6 @@ public class LogoutFilter implements Filter {
 
         HttpSession session = httpServletRequest.getSession();
 
-        System.out.println("Logout filter");
-
         if (session != null && session.getAttribute("email") != null) {
             httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/");
         } else  {

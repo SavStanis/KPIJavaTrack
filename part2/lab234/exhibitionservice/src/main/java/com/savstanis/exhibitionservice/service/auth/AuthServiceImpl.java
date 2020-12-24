@@ -1,8 +1,8 @@
 package com.savstanis.exhibitionservice.service.auth;
 
-import com.savstanis.exhibitionservice.model.ConnectionPoolSupplier;
+import com.savstanis.exhibitionservice.model.dao.DaoFactory;
+import com.savstanis.exhibitionservice.model.dao.DaoFactoryImpl;
 import com.savstanis.exhibitionservice.model.dao.user.UserDao;
-import com.savstanis.exhibitionservice.model.dao.user.UserDaoImpl;
 import com.savstanis.exhibitionservice.model.dto.LoginDto;
 import com.savstanis.exhibitionservice.model.dto.RegisterDto;
 import com.savstanis.exhibitionservice.model.entity.User;
@@ -12,19 +12,18 @@ import java.util.Optional;
 
 public class AuthServiceImpl implements AuthService {
 
-    private UserDao userDao;
+    private final DaoFactory daoFactory;
 
     public AuthServiceImpl() {
-        try {
-                this.userDao = new UserDaoImpl(ConnectionPoolSupplier.getDataSource().getConnection());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.daoFactory = new DaoFactoryImpl();
     }
 
     @Override
-    public User login(LoginDto loginDto) {
+    public User login(LoginDto loginDto) throws SQLException {
+        UserDao userDao = daoFactory.getUserDao();
         Optional<User> user = userDao.findByEmail(loginDto.getEmail());
+        userDao.close();
+
 
         if (user.isPresent() && user.get().getPassword().equals(loginDto.getPassword())) {
             return user.get();
@@ -33,8 +32,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegisterDto registerDto) {
-        if (userDao.findByEmail(registerDto.getEmail()).isPresent()) {
+    public boolean register(RegisterDto registerDto) throws SQLException {
+        UserDao userDao = daoFactory.getUserDao();
+        Optional<User> user = userDao.findByEmail(registerDto.getEmail());
+        userDao.close();
+
+        if (user.isPresent()) {
             return false;
         }
 

@@ -1,6 +1,8 @@
 package com.savstanis.exhibitionservice.service.authirizeduser;
 
 import com.savstanis.exhibitionservice.model.ConnectionPoolSupplier;
+import com.savstanis.exhibitionservice.model.dao.DaoFactory;
+import com.savstanis.exhibitionservice.model.dao.DaoFactoryImpl;
 import com.savstanis.exhibitionservice.model.dao.exhibition.ExhibitionDao;
 import com.savstanis.exhibitionservice.model.dao.exhibition.ExhibitionDaoImpl;
 import com.savstanis.exhibitionservice.model.dao.ticket.TicketDao;
@@ -16,28 +18,21 @@ import java.util.Optional;
 
 public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
-    TicketDao ticketDao;
-    ExhibitionDao exhibitionDao;
+    private final DaoFactory daoFactory;
 
     public AuthorizedUserServiceImpl() {
-        try {
-            this.exhibitionDao = new ExhibitionDaoImpl(ConnectionPoolSupplier.getDataSource().getConnection());
-            this.ticketDao = new TicketDaoImpl(ConnectionPoolSupplier.getDataSource().getConnection());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        daoFactory = new DaoFactoryImpl();
     }
 
     @Override
-    public void buyTicket(int exhibitionId, int userId) {
-        System.out.println("buyTicket");
+    public void buyTicket(int exhibitionId, int userId) throws SQLException {
+        ExhibitionDao exhibitionDao = daoFactory.getExhibitionDao();
         Optional<Exhibition> exhibition = exhibitionDao.getActiveById(exhibitionId);
+        exhibitionDao.close();
 
         if (exhibition.isEmpty()) {
             return;
         }
-
-        System.out.println("Helloi" + exhibition.get());
 
         Ticket ticket = Ticket.builder()
                 .setExhibitionId(exhibitionId)
@@ -46,13 +41,16 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
                 .setPurchaseTime(new Date())
                 .build();
 
-        System.out.println(ticket);
-
+        TicketDao ticketDao = daoFactory.getTicketDao();
         ticketDao.create(ticket);
+        exhibitionDao.close();
     }
 
     @Override
-    public List<TicketDto> getUsersTickets(int userId) {
-        return ticketDao.getExpandedByUserId(userId);
+    public List<TicketDto> getUsersTickets(int userId) throws SQLException {
+        TicketDao ticketDao = daoFactory.getTicketDao();
+        List<TicketDto> result = ticketDao.getExpandedByUserId(userId);
+        ticketDao.close();
+        return result;
     }
 }

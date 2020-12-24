@@ -74,6 +74,9 @@
     }
 </script>
 <body>
+<c:if test="${requestScope.get('error') != null}">
+    <div style="color: #ff0000">Error: ${requestScope.get('error')}</div>
+</c:if>
 <c:if test="${sessionScope.get('email') != null}">
     <h2>Hello ${sessionScope.get('email')}</h2>
     <a href="${pageContext.request.contextPath}/tickets">My tickets</a>

@@ -1,5 +1,7 @@
 package com.savstanis.exhibitionservice.controller.command;
 
+import com.savstanis.exhibitionservice.exception.InvalidDateException;
+import com.savstanis.exhibitionservice.exception.InvalidPriceException;
 import com.savstanis.exhibitionservice.model.dto.ExhibitionCreationDto;
 import com.savstanis.exhibitionservice.service.admin.AdminService;
 
@@ -7,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -45,10 +48,12 @@ public class CreateExhibition implements Command{
 
             adminService.createExhibition(exhibitionCreationDto);
 
-            response.sendRedirect("/");
-        } catch (ParseException e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Invalid date");
+            response.sendRedirect(request.getContextPath() + "/");
+        } catch (ParseException | SQLException e) {
+            request.setAttribute("error", "Sorry, some problems on our server");
+            request.getRequestDispatcher("/jsp/createExhibition.jsp").forward(request, response);
+        } catch (InvalidDateException | InvalidPriceException e) {
+            request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher("/jsp/createExhibition.jsp").forward(request, response);
         }
     }

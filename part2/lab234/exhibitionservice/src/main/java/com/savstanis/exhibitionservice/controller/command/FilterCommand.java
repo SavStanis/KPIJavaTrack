@@ -6,13 +6,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FilterCommand implements Command {
 
-    private UnauthorizedUserService unauthorizedUserService;
+    private final UnauthorizedUserService unauthorizedUserService;
 
     public FilterCommand(UnauthorizedUserService unauthorizedUserService) {
         this.unauthorizedUserService = unauthorizedUserService;
@@ -57,8 +58,9 @@ public class FilterCommand implements Command {
             }
             System.out.println(request.getAttribute("exhibitions"));
             request.getRequestDispatcher("/jsp/index.jsp").forward(request, response);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException | SQLException e) {
+            request.setAttribute("error", "Sorry, some problems on our server");
+            request.getRequestDispatcher("/jsp/index.jsp").forward(request, response);
         }
     }
 }

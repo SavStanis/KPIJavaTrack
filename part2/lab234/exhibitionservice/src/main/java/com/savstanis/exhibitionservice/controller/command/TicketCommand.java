@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,14 +36,20 @@ public class TicketCommand implements Command {
 
     void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        List<TicketDto> tickets =  authorizedUserService.getUsersTickets((Integer) session.getAttribute("user_id"));
+        List<TicketDto> tickets = null;
+        try {
+            tickets = authorizedUserService.getUsersTickets((Integer) session.getAttribute("user_id"));
+        } catch (SQLException throwables) {
+            request.setAttribute("error", "Sorry, some problems on our server");
+            request.getRequestDispatcher("/jsp/createExhibition.jsp").forward(request, response);
+        }
 
         request.setAttribute("tickets", tickets);
 
         request.getRequestDispatcher("/jsp/tickets.jsp").forward(request, response);
     }
 
-    void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         String body = request.getReader().lines().collect(Collectors.joining());
         Gson gson = new Gson();
@@ -52,6 +59,11 @@ public class TicketCommand implements Command {
 
         System.out.println("doPost");
 
-        authorizedUserService.buyTicket(exhibitionId, userId);
+        try {
+            authorizedUserService.buyTicket(exhibitionId, userId);
+        } catch (SQLException throwables) {
+            request.setAttribute("error", "Sorry, some problems on our server");
+            request.getRequestDispatcher("/jsp/index.jsp").forward(request, response);
+        }
     }
 }

@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class RegisterCommand implements Command {
 
@@ -39,7 +40,13 @@ public class RegisterCommand implements Command {
         registerDto.setName(request.getParameter("name"));
         registerDto.setPassword(request.getParameter("password"));
 
-        boolean result = authService.register(registerDto);
+        boolean result = false;
+        try {
+            result = authService.register(registerDto);
+        } catch (SQLException throwables) {
+            request.setAttribute("error", "Sorry, some problems on our server");
+            request.getRequestDispatcher("/jsp/register.jsp").forward(request, response);
+        }
 
         if (!result) {
             request.setAttribute("error", "User already exists");

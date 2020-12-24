@@ -176,4 +176,13 @@ public class ExhibitionDaoImpl implements ExhibitionDao {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 }

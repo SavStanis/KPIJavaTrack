@@ -14,4 +14,5 @@ public interface TicketDao {
     List<TicketDto> getExpandedByExhibitionId(int exhibitionId);
 
     int countTicketsByExhibitionId(int exhibitionId);
+    void close();
 }

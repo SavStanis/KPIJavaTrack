@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginCommand implements Command {
 
@@ -39,7 +40,13 @@ public class LoginCommand implements Command {
         loginDto.setEmail(request.getParameter("email"));
         loginDto.setPassword(request.getParameter("password"));
 
-        User user = authService.login(loginDto);
+        User user = null;
+        try {
+            user = authService.login(loginDto);
+        } catch (SQLException throwables) {
+            request.setAttribute("error", "Sorry, some problems on our server");
+            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+        }
 
         if (user != null) {
             HttpSession httpSession = request.getSession();

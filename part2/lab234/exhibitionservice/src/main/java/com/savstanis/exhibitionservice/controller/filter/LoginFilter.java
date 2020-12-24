@@ -14,12 +14,10 @@ public class LoginFilter implements Filter {
 
         HttpSession session = httpServletRequest.getSession();
 
-        System.out.println("Login filter");
-
         if (session != null && session.getAttribute("email") != null) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } else  {
-            httpServletResponse.sendRedirect("/login");
+            httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login");
         }
     }
 
